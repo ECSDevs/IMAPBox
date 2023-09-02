@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>获取通行密匙</title>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+function getKey(){
+  $.post("/getKey").done(function(res){$("#key").text(res);});
+};
+</script>
+</head>
+<body>
+<h1>IMAPBox通行密钥</h1>
+<p><a href="https://docs.qq.com/doc/DWUFIWkNVY2R5bkJ4" target="_blank">点击查看文档</a></p>
+<button onclick="getKey()">获取</button>
+<div id="key"></div>
+</body>

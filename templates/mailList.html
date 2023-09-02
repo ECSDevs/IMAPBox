@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Viewer</title>
+</head>
+<body>
+  <p>
+  <a href="/pullemails">刷新邮件列表</a>
+  |
+  <a href="/getKey" target="_blank">获取密钥</a>
+  |
+  <a href="/login?key=0">登出系统</a>
+  |
+  <a href="/logout">注销账户（断开连接并删除本服务器内邮件数据缓存）</a>
+  </p>
+  <div style="float:up">
+    <iframe style="width:1000px;height:500px;" src="" frameborder="1"></iframe>
+  </div>
+	<div style="float:down">
+		<ul>
+{% for i in range((mails|length)-1,-1,-1) %}
+			<li onclick="loadEmail('/mail/{{mails[i]["id"]}}')">{{mails[i]["subject"]}}</li>
+{% endfor %}
+		</ul>
+  </div>
+  <script>
+    function loadEmail(url) {
+      var iframe = document.getElementsByTagName('iframe')[0];
+      iframe.src = url;
+    }
+  </script>
+</body>
+</html>

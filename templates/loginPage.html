@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Email Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    .container {
+      width: 300px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    }
+
+    .container h2 {
+      margin-bottom: 20px;
+    }
+
+    .container input[type="text"],
+    .container input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    .container input[type="submit"] {
+      width: 100%;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .container input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .err {
+        color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Email Login</h2>
+    <form method="POST">
+      <input type="text" name="username" placeholder="Email" required><br>
+      <input type="password" name="password" placeholder="Password" required><br>
+      <input type="text" name="server" placeholder="IMAP Server ( Default imap.feishu.cn )"><br>
+      <input type="text" name="port" placeholder="IMAP Port ( Default 993 )"><br>
+      <input type="submit" value="Login">
+    </form>
+  </div>
+  <p class="err">{{err}}</p>
+  <p><a href="/useKey">使用密钥登录</a></p>
+</body>
+</html>
