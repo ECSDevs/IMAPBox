@@ -8,7 +8,7 @@ import string
 # 创建Flask对象
 app = flask.Flask(__name__)
 # 设置session加密，每次启动随机生成32位字母
-app.secret_key = random.choices(string.ascii_letters,k=32)
+app.secret_key = ''.join(random.choices(string.ascii_letters,k=32))
 
 # IMAP类
 class Mail:
@@ -37,25 +37,25 @@ class Mail:
         self.conn.select(self.mailbox)
     # 拉取邮件
     def pull(self):
-        result,data = self.conn.search(None,"ALL")
-        if result!='OK':
+        sRes,sData = self.conn.search(None,"ALL")
+        if sRes!='OK':
             print("或许什么地方出错了")
-        for i in data[0].split():
+        for i in sData[0].split():
             if int(i)<=self.lastmail:
                 continue
             self.lastmail = int(i)
-            result,data = self.conn.fetch(i,"(RFC822)")
-            if result!='OK':
-                ("或许什么地方出错了")
-            data = email.message_from_bytes(data[0][1])
+            fRes,fData = self.conn.fetch(i,"(RFC822)")
+            if fRes!='OK':
+                print("或许什么地方出错了")
+            mail = email.message_from_bytes(data[0][1])
             self.mails.append(
                 {
                     "id": int(i),
-                    "sender": data["From"],
-                    "receiver": data["To"],
-                    "subject": data["Subject"],
-                    "time": data["Date"],
-                    "content": data.get_payload(decode=True)
+                    "sender": mail["From"],
+                    "receiver": mail["To"],
+                    "subject": mail["Subject"],
+                    "time": mail["Date"],
+                    "content": mail.get_payload().decode('UTF-8')
                 }
             )
     # 断开与SMTP服务器的连接
@@ -70,10 +70,15 @@ def uKey():
     if "key" in flask.request.args.keys():
         flask.session["imapkey"] = flask.request.args["key"]
         return 1
-    elif "key" in flask.request.form.keys():
+    if "key" in flask.request.form.keys():
         flask.session["imapkey"] = flask.request.form["key"]
         return 1
     return 0
+
+def defaultValue(result, dval):
+    if not result:
+        return dval
+    return result
 
 # 路由/login路径，接收POST请求
 @app.route("/login",methods=['POST'])
@@ -81,8 +86,8 @@ def login():
     # 临时变量，存储用户请求带有的信息，如果不存在返回None
     username = flask.request.form.get("username")
     password = flask.request.form.get("password")
-    IMAPServer = flask.request.form.get("server","imap.feishu.cn")
-    IMAPPort = int(flask.request.form.get("port","993"))
+    IMAPServer = defaultValue(flask.request.form.get("server"),"imap.feishu.cn")
+    IMAPPort = int(defaultValue(flask.request.form.get("port"),"993"))
     # 如果username或password中有任意为空(None)，跳出并返回错误。
     if not username or not password:
         flask.session["errMsg"] = "未设置凭据"
